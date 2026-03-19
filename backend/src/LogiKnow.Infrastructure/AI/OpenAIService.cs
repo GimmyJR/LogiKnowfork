@@ -13,15 +13,29 @@ public class OpenAIService : IAIService
     private readonly string _model;
     private readonly int _maxTokens;
     private readonly ILogger<OpenAIService> _logger;
+    private readonly bool _isConfigured;
 
     public OpenAIService(IConfiguration config, ILogger<OpenAIService> logger)
     {
-        var apiKey = config["OpenAI:ApiKey"] ?? "REPLACE";
+        var apiKey = config["OpenAI:ApiKey"] ?? "";
         _model = config["OpenAI:Model"] ?? "gpt-4o";
         _maxTokens = int.TryParse(config["OpenAI:MaxTokens"], out var mt) ? mt : 500;
-        _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
         _logger = logger;
+
+        // Check if a real API key is configured
+        _isConfigured = !string.IsNullOrWhiteSpace(apiKey)
+                        && !apiKey.Equals("REPLACE", StringComparison.OrdinalIgnoreCase);
+
+        _httpClient = new HttpClient();
+        if (_isConfigured)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+        }
+        else
+        {
+            _logger.LogWarning("OpenAI API key is not configured. AI explanations will return a fallback message. " +
+                "To enable AI, set a valid key in appsettings.json → OpenAI:ApiKey");
+        }
     }
 
     public async Task<string> GenerateExplanationAsync(
@@ -29,6 +43,18 @@ public class OpenAIService : IAIService
         string definitionEn, string lang, string style,
         CancellationToken ct = default)
     {
+        // Return a helpful fallback when no real API key is configured
+        if (!_isConfigured)
+        {
+            var termName = !string.IsNullOrEmpty(termNameAr) ? termNameAr : termNameEn;
+            return lang switch
+            {
+                "ar" => $"خدمة الذكاء الاصطناعي غير متاحة حالياً. الرجاء إعداد مفتاح OpenAI API في إعدادات التطبيق.\n\nالتعريف: {definitionEn}",
+                "fr" => $"Le service IA n'est pas disponible actuellement. Veuillez configurer une clé API OpenAI.\n\nDéfinition: {definitionEn}",
+                _    => $"AI explanation service is not available. Please configure an OpenAI API key in appsettings.json → OpenAI:ApiKey.\n\nDefinition: {definitionEn}"
+            };
+        }
+
         var (systemPrompt, userPrompt) = PromptBuilder.BuildExplainTermPrompt(
             termNameEn, termNameAr, category, definitionEn, lang, style);
 

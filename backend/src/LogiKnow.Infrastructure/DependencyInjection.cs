@@ -19,9 +19,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Database
+        // Database — SQL Server via Docker
         services.AddDbContext<AppDbContext>(options =>
-            options.UseInMemoryDatabase("LogiKnowDb"));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         // Identity
         services.AddIdentityCore<User>(options =>
