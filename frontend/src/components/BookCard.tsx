@@ -33,19 +33,28 @@ export default function BookCard({ book, locale }: { book: BookDto, locale: stri
           <span className="font-mono text-xs text-blue-300/50 bg-white/5 px-2 py-1 rounded-md">{book.language.toUpperCase()}</span>
           
           <div className="flex gap-2">
-            {book.externalLink && (
-              <a href={book.externalLink} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-white flex items-center gap-1.5 text-sm font-bold transition-colors">
-                {t('read')} <ExternalLink className="w-4 h-4" />
-              </a>
-            )}
-            
-            {/* Download button for uploaded PDFs */}
-            {(book as any).blobStoragePath && (
-              <a href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5038'}${(book as any).blobStoragePath}`} target="_blank" rel="noopener noreferrer" 
-                 className="manar-btn-gold px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-sm font-bold shadow-lg">
-                PDF <ExternalLink className="w-4 h-4" />
-              </a>
-            )}
+            {(() => {
+              const hasExternalLink = book.externalLink && book.externalLink !== "NA" && book.externalLink.length > 3;
+              const hasPdf = !!(book as any).blobStoragePath;
+              const pdfUrl = hasPdf ? `${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5038/api').replace('/api', '')}${(book as any).blobStoragePath}` : null;
+              
+              const readUrl = pdfUrl || (hasExternalLink ? book.externalLink : null);
+              
+              if (readUrl) {
+                return (
+                  <a href={readUrl} target="_blank" rel="noopener noreferrer" 
+                     className="manar-btn-gold px-4 py-1.5 rounded-lg flex items-center gap-2 text-sm font-bold shadow-lg">
+                    {hasPdf ? 'Read PDF' : t('read')} <ExternalLink className="w-4 h-4" />
+                  </a>
+                );
+              }
+              
+              return (
+                 <button disabled className="px-4 py-1.5 rounded-lg flex items-center gap-2 text-sm font-bold text-white/30 cursor-not-allowed border border-white/10" title="No document available">
+                   {t('read')} <ExternalLink className="w-4 h-4" />
+                 </button>
+              );
+            })()}
           </div>
         </div>
       </div>

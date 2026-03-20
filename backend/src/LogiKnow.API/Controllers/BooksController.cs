@@ -62,14 +62,13 @@ public class BooksController : ControllerBase
 
     [HttpPost("{id:guid}/upload")]
     [Authorize(Roles = "Admin,Moderator")]
-    public async Task<IActionResult> UploadBookPdf(Guid id, IFormFile file, CancellationToken ct = default)
+    public async Task<IActionResult> UploadBookPdf(Guid id, IFormFile file, [FromServices] LogiKnow.Infrastructure.Persistence.AppDbContext dbContext, CancellationToken ct = default)
     {
         if (file == null || file.Length == 0) return BadRequest("File is empty or not provided.");
         if (Path.GetExtension(file.FileName).ToLower() != ".pdf") return BadRequest("Only PDF files are allowed.");
 
-        // Here we should fetch the book first, but to keep it simple and skip repository dependency directly here:
-        // We'll trust the ID exists since this is an admin feature.
-        // A full implementation would inject IBookRepository, verify the book, save the path to BlobStoragePath.
+        var book = await dbContext.Books.FindAsync(new object[] { id }, ct);
+        if (book == null) return NotFound("Book not found.");
 
         var uploadsPath = Path.Combine(_env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "uploads", "books");
         if (!Directory.Exists(uploadsPath)) Directory.CreateDirectory(uploadsPath);
@@ -84,7 +83,11 @@ public class BooksController : ControllerBase
 
         var relativePath = $"/uploads/books/{fileName}";
         
-        _logger.LogInformation("Uploaded PDF for book {Id} to {Path}", id, relativePath);
+        book.BlobStoragePath = relativePath;
+        book.UpdatedAt = DateTime.UtcNow;
+        await dbContext.SaveChangesAsync(ct);
+        
+        _logger.LogInformation("Uploaded PDF and updated path for book {Id} to {Path}", id, relativePath);
         
         return Ok(new { message = "Book PDF uploaded successfully.", path = relativePath });
     }

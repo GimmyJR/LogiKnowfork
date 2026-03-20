@@ -118,6 +118,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.UseStaticFiles(); // Allow serving PDFs from wwwroot
 app.UseIpRateLimiting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -126,6 +127,17 @@ app.MapControllers();
 // ===== Seed Roles & Ensure ES Indices =====
 using (var scope = app.Services.CreateScope())
 {
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<LogiKnow.Infrastructure.Persistence.AppDbContext>();
+        dbContext.Database.EnsureDeleted(); // Reset schema during dev
+        dbContext.Database.EnsureCreated();
+    }
+    catch (Exception ex)
+    {
+        Log.Warning(ex, "Failed to initialize the in-memory database on startup.");
+    }
+
     var roleManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
     string[] roles = { "Admin", "Moderator", "User" };
     foreach (var role in roles)
@@ -134,15 +146,18 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new Microsoft.AspNetCore.Identity.IdentityRole(role));
     }
 
-    try
+    var userManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<LogiKnow.Domain.Entities.User>>();
+    if (await userManager.FindByEmailAsync("admin@manara.com") == null)
     {
-        var dbContext = scope.ServiceProvider.GetRequiredService<LogiKnow.Infrastructure.Persistence.AppDbContext>();
-        dbContext.Database.EnsureDeleted(); // <-- Added to reset schema during dev
-        dbContext.Database.EnsureCreated();
-    }
-    catch (Exception ex)
-    {
-        Log.Warning(ex, "Failed to initialize the in-memory database on startup.");
+        var adminUser = new LogiKnow.Domain.Entities.User
+        {
+            UserName = "admin@manara.com",
+            Email = "admin@manara.com",
+            FullName = "System Administrator",
+            PreferredLanguage = "en"
+        };
+        await userManager.CreateAsync(adminUser, "Admin123!");
+        await userManager.AddToRoleAsync(adminUser, "Admin");
     }
 
     try

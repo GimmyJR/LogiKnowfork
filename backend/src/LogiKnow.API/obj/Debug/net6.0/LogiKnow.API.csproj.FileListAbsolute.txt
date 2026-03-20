@@ -102,3 +102,4 @@ D:\ATD\Downloads\logi\backend\src\LogiKnow.API\obj\Debug\net6.0\refint\LogiKnow.
 D:\ATD\Downloads\logi\backend\src\LogiKnow.API\obj\Debug\net6.0\LogiKnow.API.pdb
 D:\ATD\Downloads\logi\backend\src\LogiKnow.API\obj\Debug\net6.0\LogiKnow.API.genruntimeconfig.cache
 D:\ATD\Downloads\logi\backend\src\LogiKnow.API\obj\Debug\net6.0\ref\LogiKnow.API.dll
+D:\ATD\Downloads\logi\backend\src\LogiKnow.API\bin\Debug\net6.0\LogiKnow.API.staticwebassets.runtime.json

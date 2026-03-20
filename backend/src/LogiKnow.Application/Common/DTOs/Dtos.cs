@@ -84,6 +84,7 @@ public class BookDto
     public string Category { get; set; } = string.Empty;
     public string? CoverUrl { get; set; }
     public string? ExternalLink { get; set; }
+    public string? BlobStoragePath { get; set; }
     public bool IsIndexedForSearch { get; set; }
     public bool IsPublished { get; set; }
     public DateTime CreatedAt { get; set; }

@@ -1,11 +1,88 @@
 {
   "Version": 1,
-  "Hash": "B+Isd4HsRGY+VKMr+oXxt8DIOhFDHI+GXb0nhiM9GGg=",
+  "Hash": "3tnDktwnjI4miQUv+MYjkj0vmX7UA2PYMz+aUTFMREQ=",
   "Source": "LogiKnow.API",
   "BasePath": "_content/LogiKnow.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "LogiKnow.API\\wwwroot",
+      "Source": "LogiKnow.API",
+      "ContentRoot": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\",
+      "BasePath": "_content/LogiKnow.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\uploads\\books\\2ac1e745-1772-4744-b41a-c4e6df598103.pdf",
+      "SourceId": "LogiKnow.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\",
+      "BasePath": "_content/LogiKnow.API",
+      "RelativePath": "uploads/books/2ac1e745-1772-4744-b41a-c4e6df598103.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\books\\2ac1e745-1772-4744-b41a-c4e6df598103.pdf"
+    },
+    {
+      "Identity": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\uploads\\books\\8ef88a84-d10d-4311-b9f9-401a114bd9df.pdf",
+      "SourceId": "LogiKnow.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\",
+      "BasePath": "_content/LogiKnow.API",
+      "RelativePath": "uploads/books/8ef88a84-d10d-4311-b9f9-401a114bd9df.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\books\\8ef88a84-d10d-4311-b9f9-401a114bd9df.pdf"
+    },
+    {
+      "Identity": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\uploads\\books\\ab0e4940-0e1f-4a72-b73e-9515d7112ec1.pdf",
+      "SourceId": "LogiKnow.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\",
+      "BasePath": "_content/LogiKnow.API",
+      "RelativePath": "uploads/books/ab0e4940-0e1f-4a72-b73e-9515d7112ec1.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\books\\ab0e4940-0e1f-4a72-b73e-9515d7112ec1.pdf"
+    },
+    {
+      "Identity": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\uploads\\books\\cd61713c-5ad9-4806-a980-38a20929c7c1.pdf",
+      "SourceId": "LogiKnow.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\ATD\\Downloads\\logi\\backend\\src\\LogiKnow.API\\wwwroot\\",
+      "BasePath": "_content/LogiKnow.API",
+      "RelativePath": "uploads/books/cd61713c-5ad9-4806-a980-38a20929c7c1.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\books\\cd61713c-5ad9-4806-a980-38a20929c7c1.pdf"
+    }
+  ]
 }

@@ -23,3 +23,251 @@
 2026-03-20 00:15:11.980 +02:00 [DBG] → GET /api/books
 2026-03-20 00:15:11.981 +02:00 [DBG] GetAll books: lang=null, category=null
 2026-03-20 00:15:11.990 +02:00 [DBG] ← GET /api/books → 200 (9ms)
+2026-03-20 00:18:12.471 +02:00 [DBG] → GET /api/books
+2026-03-20 00:18:12.472 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 00:18:12.482 +02:00 [DBG] ← GET /api/books → 200 (10ms)
+2026-03-20 00:18:15.791 +02:00 [DBG] → GET /api/academic
+2026-03-20 00:18:15.792 +02:00 [DBG] GetAll academic entries: type=null, tag=null, year=null
+2026-03-20 00:18:15.798 +02:00 [DBG] ← GET /api/academic → 200 (6ms)
+2026-03-20 00:18:18.570 +02:00 [DBG] → GET /api/books
+2026-03-20 00:18:18.570 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 00:18:18.576 +02:00 [DBG] ← GET /api/books → 200 (6ms)
+2026-03-20 00:36:23.691 +02:00 [DBG] → GET /api/arenavideos
+2026-03-20 00:36:23.695 +02:00 [DBG] GetAll arena videos: page=1, size=10
+2026-03-20 00:36:23.774 +02:00 [DBG] ← GET /api/arenavideos → 200 (83ms)
+2026-03-20 00:36:23.777 +02:00 [DBG] → GET /api/arenavideos
+2026-03-20 00:36:23.778 +02:00 [DBG] GetAll arena videos: page=1, size=10
+2026-03-20 00:36:23.793 +02:00 [DBG] ← GET /api/arenavideos → 200 (15ms)
+2026-03-20 00:40:52.767 +02:00 [DBG] → GET /swagger
+2026-03-20 00:40:52.773 +02:00 [DBG] ← GET /swagger → 301 (5ms)
+2026-03-20 00:40:52.778 +02:00 [DBG] → GET /swagger/index.html
+2026-03-20 00:40:52.882 +02:00 [DBG] ← GET /swagger/index.html → 200 (104ms)
+2026-03-20 00:40:52.921 +02:00 [DBG] → GET /swagger/swagger-ui.css
+2026-03-20 00:40:52.922 +02:00 [DBG] → GET /swagger/swagger-ui-bundle.js
+2026-03-20 00:40:52.923 +02:00 [DBG] → GET /swagger/swagger-ui-standalone-preset.js
+2026-03-20 00:40:52.970 +02:00 [DBG] ← GET /swagger/swagger-ui-standalone-preset.js → 200 (47ms)
+2026-03-20 00:40:52.970 +02:00 [DBG] ← GET /swagger/swagger-ui.css → 200 (49ms)
+2026-03-20 00:40:52.990 +02:00 [DBG] ← GET /swagger/swagger-ui-bundle.js → 200 (68ms)
+2026-03-20 00:40:53.328 +02:00 [DBG] → GET /swagger/v1/swagger.json
+2026-03-20 00:40:53.355 +02:00 [DBG] → GET /swagger/favicon-32x32.png
+2026-03-20 00:40:53.355 +02:00 [DBG] ← GET /swagger/favicon-32x32.png → 200 (0ms)
+2026-03-20 00:40:53.493 +02:00 [DBG] ← GET /swagger/v1/swagger.json → 200 (164ms)
+2026-03-20 00:53:14.101 +02:00 [DBG] → POST /api/Books
+2026-03-20 00:53:14.167 +02:00 [DBG] ← POST /api/Books → 401 (65ms)
+2026-03-20 00:57:18.143 +02:00 [DBG] → POST /api/Auth/register
+2026-03-20 00:57:18.220 +02:00 [DBG] Register user: mh8093859@gmail.com
+2026-03-20 00:57:18.234 +02:00 [WRN] User password validation failed: PasswordTooShort;PasswordRequiresDigit;PasswordRequiresUpper.
+2026-03-20 00:57:18.241 +02:00 [DBG] ← POST /api/Auth/register → 400 (97ms)
+2026-03-20 00:57:41.947 +02:00 [DBG] → POST /api/Auth/register
+2026-03-20 00:57:41.949 +02:00 [DBG] Register user: mh8093859@gmail.com
+2026-03-20 00:57:42.353 +02:00 [ERR] Unhandled exception
+System.InvalidOperationException: Role USER does not exist.
+   at Microsoft.AspNetCore.Identity.EntityFrameworkCore.UserStore`9.AddToRoleAsync(TUser user, String normalizedRoleName, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Identity.UserManager`1.AddToRoleAsync(TUser user, String role)
+   at LogiKnow.API.Controllers.AuthController.Register(RegisterRequest request, CancellationToken ct) in D:\ATD\Downloads\logi\backend\src\LogiKnow.API\Controllers\AuthController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at AspNetCoreRateLimit.RateLimitMiddleware`1.Invoke(HttpContext context) in C:\Users\User\Documents\Github\AspNetCoreRateLimit\src\AspNetCoreRateLimit\Middleware\RateLimitMiddleware.cs:line 124
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at LogiKnow.API.Middleware.RequestLoggingMiddleware.InvokeAsync(HttpContext context) in D:\ATD\Downloads\logi\backend\src\LogiKnow.API\Middleware\RequestLoggingMiddleware.cs:line 21
+   at LogiKnow.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in D:\ATD\Downloads\logi\backend\src\LogiKnow.API\Middleware\ExceptionMiddleware.cs:line 22
+2026-03-20 00:58:05.775 +02:00 [DBG] → POST /api/Auth/register
+2026-03-20 00:58:05.799 +02:00 [DBG] Register user: mh8093859@gmail.com
+2026-03-20 00:58:05.886 +02:00 [WRN] User validation failed: DuplicateUserName.
+2026-03-20 00:58:05.887 +02:00 [DBG] ← POST /api/Auth/register → 400 (111ms)
+2026-03-20 00:59:57.125 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 00:59:57.136 +02:00 [DBG] Login user: mh8093859@gmail.com
+2026-03-20 00:59:57.251 +02:00 [DBG] ← POST /api/Auth/login → 200 (126ms)
+2026-03-20 01:01:21.350 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:01:21.354 +02:00 [DBG] ← POST /api/Books → 401 (3ms)
+2026-03-20 01:02:48.356 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:02:48.358 +02:00 [DBG] ← POST /api/Books → 401 (2ms)
+2026-03-20 01:02:52.465 +02:00 [DBG] → GET /swagger/index.html
+2026-03-20 01:02:52.467 +02:00 [DBG] ← GET /swagger/index.html → 200 (1ms)
+2026-03-20 01:02:52.720 +02:00 [DBG] → GET /swagger/v1/swagger.json
+2026-03-20 01:02:52.739 +02:00 [DBG] ← GET /swagger/v1/swagger.json → 200 (19ms)
+2026-03-20 01:03:52.797 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:03:52.798 +02:00 [DBG] ← POST /api/Books → 401 (0ms)
+2026-03-20 01:04:13.418 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:04:13.418 +02:00 [DBG] ← POST /api/Books → 401 (0ms)
+2026-03-20 01:04:39.223 +02:00 [DBG] → POST /api/Auth/refresh
+2026-03-20 01:04:39.233 +02:00 [DBG] Refresh token
+2026-03-20 01:04:39.234 +02:00 [DBG] ← POST /api/Auth/refresh → 200 (11ms)
+2026-03-20 01:04:58.777 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:04:58.778 +02:00 [DBG] ← POST /api/Books → 401 (0ms)
+2026-03-20 01:10:37.824 +02:00 [INF] MANARA API starting on 
+2026-03-20 01:11:40.266 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 01:11:40.417 +02:00 [DBG] Login user: admin@manara.com
+2026-03-20 01:11:40.509 +02:00 [DBG] ← POST /api/Auth/login → 401 (251ms)
+2026-03-20 01:12:31.655 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 01:12:31.664 +02:00 [DBG] Login user: admin@manara.com
+2026-03-20 01:12:31.672 +02:00 [DBG] ← POST /api/Auth/login → 401 (17ms)
+2026-03-20 01:12:43.630 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 01:12:43.637 +02:00 [DBG] Login user: admin@manara.com
+2026-03-20 01:12:43.639 +02:00 [DBG] ← POST /api/Auth/login → 401 (9ms)
+2026-03-20 01:12:55.994 +02:00 [DBG] → GET /swagger/index.html
+2026-03-20 01:12:56.050 +02:00 [DBG] ← GET /swagger/index.html → 200 (56ms)
+2026-03-20 01:12:56.133 +02:00 [DBG] → GET /swagger/v1/swagger.json
+2026-03-20 01:12:56.230 +02:00 [DBG] ← GET /swagger/v1/swagger.json → 200 (96ms)
+2026-03-20 01:13:05.977 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 01:13:05.978 +02:00 [DBG] Login user: admin@manara.com
+2026-03-20 01:13:05.982 +02:00 [DBG] ← POST /api/Auth/login → 401 (4ms)
+2026-03-20 01:13:41.509 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 01:13:41.511 +02:00 [DBG] Login user: admin@manara.com
+2026-03-20 01:13:41.523 +02:00 [DBG] ← POST /api/Auth/login → 401 (13ms)
+2026-03-20 01:14:04.118 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 01:14:04.119 +02:00 [DBG] Login user: mh8093859@gmail.com
+2026-03-20 01:14:04.138 +02:00 [DBG] ← POST /api/Auth/login → 401 (20ms)
+2026-03-20 01:14:17.998 +02:00 [DBG] → POST /api/Auth/refresh
+2026-03-20 01:14:18.003 +02:00 [DBG] Refresh token
+2026-03-20 01:14:18.004 +02:00 [DBG] ← POST /api/Auth/refresh → 200 (5ms)
+2026-03-20 01:14:35.492 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 01:14:35.493 +02:00 [DBG] Login user: admin@manara.com
+2026-03-20 01:14:35.496 +02:00 [DBG] ← POST /api/Auth/login → 401 (3ms)
+2026-03-20 01:16:08.334 +02:00 [INF] MANARA API starting on 
+2026-03-20 01:17:09.931 +02:00 [DBG] → POST /api/Auth/login
+2026-03-20 01:17:10.390 +02:00 [DBG] Login user: admin@manara.com
+2026-03-20 01:17:11.317 +02:00 [DBG] ← POST /api/Auth/login → 200 (1414ms)
+2026-03-20 01:18:06.859 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:18:06.881 +02:00 [DBG] ← POST /api/Books → 401 (21ms)
+2026-03-20 01:18:43.906 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:18:43.933 +02:00 [DBG] ← POST /api/Books → 401 (26ms)
+2026-03-20 01:19:10.049 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:19:10.050 +02:00 [DBG] ← POST /api/Books → 401 (0ms)
+2026-03-20 01:19:35.675 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:19:35.675 +02:00 [DBG] ← POST /api/Books → 401 (0ms)
+2026-03-20 01:22:16.683 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:22:16.776 +02:00 [DBG] Add book: st
+2026-03-20 01:22:17.091 +02:00 [DBG] ← POST /api/Books → 201 (408ms)
+2026-03-20 01:23:27.234 +02:00 [DBG] → POST /api/Books/2ac1e745-1772-4744-b41a-c4e6df598103/upload
+2026-03-20 01:23:27.301 +02:00 [INF] Uploaded PDF for book "2ac1e745-1772-4744-b41a-c4e6df598103" to /uploads/books/2ac1e745-1772-4744-b41a-c4e6df598103.pdf
+2026-03-20 01:23:27.304 +02:00 [DBG] ← POST /api/Books/2ac1e745-1772-4744-b41a-c4e6df598103/upload → 200 (69ms)
+2026-03-20 01:23:33.739 +02:00 [DBG] → GET /api/arenavideos
+2026-03-20 01:23:33.777 +02:00 [DBG] GetAll arena videos: page=1, size=10
+2026-03-20 01:23:34.011 +02:00 [DBG] ← GET /api/arenavideos → 200 (271ms)
+2026-03-20 01:23:35.601 +02:00 [DBG] → GET /api/books
+2026-03-20 01:23:35.612 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:23:35.918 +02:00 [DBG] ← GET /api/books → 200 (316ms)
+2026-03-20 01:26:30.956 +02:00 [INF] MANARA API starting on 
+2026-03-20 01:27:58.855 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:27:59.044 +02:00 [DBG] Add book: new
+2026-03-20 01:27:59.356 +02:00 [DBG] ← POST /api/Books → 201 (507ms)
+2026-03-20 01:28:29.366 +02:00 [DBG] → POST /api/Books/8ef88a84-d10d-4311-b9f9-401a114bd9df/upload
+2026-03-20 01:28:29.447 +02:00 [INF] Uploaded PDF for book "8ef88a84-d10d-4311-b9f9-401a114bd9df" to /uploads/books/8ef88a84-d10d-4311-b9f9-401a114bd9df.pdf
+2026-03-20 01:28:29.452 +02:00 [DBG] ← POST /api/Books/8ef88a84-d10d-4311-b9f9-401a114bd9df/upload → 200 (85ms)
+2026-03-20 01:28:36.687 +02:00 [DBG] → GET /api/books
+2026-03-20 01:28:36.706 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:28:36.822 +02:00 [DBG] ← GET /api/books → 200 (135ms)
+2026-03-20 01:31:46.239 +02:00 [DBG] → GET /api/books
+2026-03-20 01:31:46.241 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:31:46.345 +02:00 [DBG] ← GET /api/books → 200 (106ms)
+2026-03-20 01:31:46.521 +02:00 [DBG] → GET /api/books
+2026-03-20 01:31:46.523 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:31:46.613 +02:00 [DBG] ← GET /api/books → 200 (91ms)
+2026-03-20 01:32:58.607 +02:00 [DBG] → GET /api/books
+2026-03-20 01:32:58.611 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:32:58.624 +02:00 [DBG] ← GET /api/books → 200 (16ms)
+2026-03-20 01:33:06.060 +02:00 [DBG] → GET /api/books
+2026-03-20 01:33:06.061 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:33:06.069 +02:00 [DBG] ← GET /api/books → 200 (8ms)
+2026-03-20 01:34:50.679 +02:00 [DBG] → GET /api/books
+2026-03-20 01:34:50.680 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:34:50.730 +02:00 [DBG] ← GET /api/books → 200 (51ms)
+2026-03-20 01:34:50.833 +02:00 [DBG] → GET /api/books
+2026-03-20 01:34:50.836 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:34:50.853 +02:00 [DBG] ← GET /api/books → 200 (19ms)
+2026-03-20 01:35:40.234 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:40.235 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:40.260 +02:00 [DBG] ← GET /api/books → 200 (26ms)
+2026-03-20 01:35:40.394 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:40.395 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:40.578 +02:00 [DBG] ← GET /api/books → 200 (184ms)
+2026-03-20 01:35:40.828 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:40.829 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:41.044 +02:00 [DBG] ← GET /api/books → 200 (215ms)
+2026-03-20 01:35:41.247 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:41.248 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:41.304 +02:00 [DBG] ← GET /api/books → 200 (56ms)
+2026-03-20 01:35:42.255 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:42.256 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:42.263 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:42.265 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:42.265 +02:00 [DBG] ← GET /api/books → 200 (9ms)
+2026-03-20 01:35:42.274 +02:00 [DBG] ← GET /api/books → 200 (11ms)
+2026-03-20 01:35:42.508 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:42.510 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:42.520 +02:00 [DBG] ← GET /api/books → 200 (11ms)
+2026-03-20 01:35:42.809 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:42.810 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:42.843 +02:00 [DBG] ← GET /api/books → 200 (34ms)
+2026-03-20 01:35:42.923 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:42.923 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:42.959 +02:00 [DBG] ← GET /api/books → 200 (36ms)
+2026-03-20 01:35:43.183 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:43.183 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:43.202 +02:00 [DBG] ← GET /api/books → 200 (18ms)
+2026-03-20 01:35:43.418 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:43.418 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:43.425 +02:00 [DBG] ← GET /api/books → 200 (7ms)
+2026-03-20 01:35:43.486 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:43.487 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:43.494 +02:00 [DBG] ← GET /api/books → 200 (7ms)
+2026-03-20 01:35:43.656 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:43.657 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:43.664 +02:00 [DBG] ← GET /api/books → 200 (8ms)
+2026-03-20 01:35:43.777 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:43.777 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:43.785 +02:00 [DBG] ← GET /api/books → 200 (8ms)
+2026-03-20 01:35:44.048 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:44.049 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:44.072 +02:00 [DBG] ← GET /api/books → 200 (23ms)
+2026-03-20 01:35:44.399 +02:00 [DBG] → GET /api/books
+2026-03-20 01:35:44.400 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:35:44.411 +02:00 [DBG] ← GET /api/books → 200 (11ms)
+2026-03-20 01:37:04.963 +02:00 [DBG] → GET /api/books
+2026-03-20 01:37:04.964 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:37:05.084 +02:00 [DBG] ← GET /api/books → 200 (121ms)
+2026-03-20 01:43:26.190 +02:00 [DBG] → GET /api/books
+2026-03-20 01:43:26.191 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:43:26.192 +02:00 [DBG] → GET /api/books
+2026-03-20 01:43:26.193 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:43:26.402 +02:00 [DBG] ← GET /api/books → 200 (211ms)
+2026-03-20 01:43:26.430 +02:00 [DBG] ← GET /api/books → 200 (238ms)
+2026-03-20 01:44:46.396 +02:00 [DBG] → GET /api/books
+2026-03-20 01:44:46.397 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:44:46.404 +02:00 [DBG] ← GET /api/books → 200 (7ms)
+2026-03-20 01:45:39.897 +02:00 [DBG] → HEAD /uploads/books/8ef88a84-d10d-4311-b9f9-401a114bd9df.pdf
+2026-03-20 01:45:39.913 +02:00 [DBG] ← HEAD /uploads/books/8ef88a84-d10d-4311-b9f9-401a114bd9df.pdf → 200 (15ms)
+2026-03-20 01:47:48.015 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:47:48.044 +02:00 [DBG] Add book: old
+2026-03-20 01:47:48.194 +02:00 [DBG] ← POST /api/Books → 201 (178ms)
+2026-03-20 01:48:13.970 +02:00 [DBG] → POST /api/Books/ab0e4940-0e1f-4a72-b73e-9515d7112ec1/upload
+2026-03-20 01:48:14.029 +02:00 [INF] Uploaded PDF for book "ab0e4940-0e1f-4a72-b73e-9515d7112ec1" to /uploads/books/ab0e4940-0e1f-4a72-b73e-9515d7112ec1.pdf
+2026-03-20 01:48:14.030 +02:00 [DBG] ← POST /api/Books/ab0e4940-0e1f-4a72-b73e-9515d7112ec1/upload → 200 (59ms)
+2026-03-20 01:48:19.356 +02:00 [DBG] → GET /api/books
+2026-03-20 01:48:19.356 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:48:19.363 +02:00 [DBG] ← GET /api/books → 200 (7ms)
+2026-03-20 01:50:26.334 +02:00 [INF] MANARA API starting on 
+2026-03-20 01:51:37.718 +02:00 [DBG] → GET /api/books
+2026-03-20 01:51:37.860 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:51:38.156 +02:00 [DBG] ← GET /api/books → 200 (443ms)
+2026-03-20 01:51:48.203 +02:00 [DBG] → POST /api/Books
+2026-03-20 01:51:48.317 +02:00 [DBG] Add book: old
+2026-03-20 01:51:48.425 +02:00 [DBG] ← POST /api/Books → 201 (222ms)
+2026-03-20 01:52:14.368 +02:00 [DBG] → POST /api/Books/cd61713c-5ad9-4806-a980-38a20929c7c1/upload
+2026-03-20 01:52:14.518 +02:00 [INF] Uploaded PDF and updated path for book "cd61713c-5ad9-4806-a980-38a20929c7c1" to /uploads/books/cd61713c-5ad9-4806-a980-38a20929c7c1.pdf
+2026-03-20 01:52:14.523 +02:00 [DBG] ← POST /api/Books/cd61713c-5ad9-4806-a980-38a20929c7c1/upload → 200 (154ms)
+2026-03-20 01:52:26.358 +02:00 [DBG] → GET /api/books
+2026-03-20 01:52:26.359 +02:00 [DBG] GetAll books: lang=null, category=null
+2026-03-20 01:52:26.364 +02:00 [DBG] ← GET /api/books → 200 (6ms)
