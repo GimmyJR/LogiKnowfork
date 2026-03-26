@@ -1,0 +1,24 @@
+@"
+# Build output
+**/bin/
+**/obj/
+
+# Logs
+**/logs/
+*.log
+
+# Windows reserved names
+nul
+NUL
+con
+prn
+aux
+
+# Environment
+.env
+.env.local
+appsettings.Development.json
+
+# Git helper files
+git_add_paths.txt
+"@ | Set-Content .gitignore

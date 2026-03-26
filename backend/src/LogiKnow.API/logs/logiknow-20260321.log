@@ -1,5 +1,0 @@
-2026-03-21 00:03:00.899 +02:00 [DBG] → OPTIONS /api/auth/login
-2026-03-21 00:03:00.922 +02:00 [DBG] ← OPTIONS /api/auth/login → 204 (23ms)
-2026-03-21 00:03:00.951 +02:00 [DBG] → POST /api/auth/login
-2026-03-21 00:03:00.954 +02:00 [DBG] Login user: test@example.com
-2026-03-21 00:03:01.084 +02:00 [DBG] ← POST /api/auth/login → 401 (133ms)
