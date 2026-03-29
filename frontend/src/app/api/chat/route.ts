@@ -55,11 +55,25 @@ export async function POST(request: NextRequest) {
     const languageHint = locale === 'ar' ? 'Respond in Arabic.' : locale === 'fr' ? 'Respond in French.' : 'Respond in English.';
 
     // Add conversation history
+    let lastRole = '';
     for (const msg of messages) {
-      contents.push({
-        role: msg.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: msg.content }],
-      });
+      const role = msg.role === 'assistant' ? 'model' : 'user';
+      
+      // Gemini requires alternating roles and usually starting with user.
+      if (contents.length === 0 && role === 'model') {
+         continue; // Skip leading model messages to prevent API errors
+      }
+      
+      // Prevent consecutive same-role messages by combining them or skipping
+      if (role === lastRole) {
+         contents[contents.length - 1].parts[0].text += `\n\n${msg.content}`;
+      } else {
+         contents.push({
+           role,
+           parts: [{ text: msg.content }],
+         });
+         lastRole = role;
+      }
     }
 
     const geminiPayload = {
@@ -91,12 +105,27 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await geminiResponse.json();
+    
+    // Check for safety blocks or empty candidates
+    if (!data.candidates || data.candidates.length === 0) {
+      console.warn('Gemini returned no candidates. Possible safety block.', data);
+      return NextResponse.json({ reply: 'I am unable to provide a response to that query due to content safety guidelines or an API error.' });
+    }
+
     const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text || 'I could not generate a response. Please try again.';
+      data.candidates[0]?.content?.parts?.[0]?.text || 'I could not generate a response. Please try again.';
 
     return NextResponse.json({ reply });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Chat API error:', error);
+    
+    // Provide a graceful fallback message if the connection to Gemini is blocked (e.g. timeout in certain regions)
+    if (error?.code === 'UND_ERR_CONNECT_TIMEOUT' || error?.message?.includes('fetch failed')) {
+      return NextResponse.json({ 
+        reply: "I'm having trouble connecting to my AI servers. This is usually caused by network restrictions or a required VPN. Please check your connection to Google services and try again." 
+      });
+    }
+
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

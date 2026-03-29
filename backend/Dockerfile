@@ -1,5 +1,5 @@
 # Build Stage
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /source
 
 # Copy solution and restore dependencies
@@ -16,11 +16,11 @@ WORKDIR /source/src/LogiKnow.API
 RUN dotnet publish -c Release -o /app
 
 # Run Stage
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app ./
 
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+ENV ASPNETCORE_HTTP_PORTS=8080
 
 ENTRYPOINT ["dotnet", "LogiKnow.API.dll"]

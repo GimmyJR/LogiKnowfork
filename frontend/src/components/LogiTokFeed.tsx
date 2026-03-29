@@ -24,7 +24,7 @@ export default function LogiTokFeed() {
     fetchVideos();
   }, []);
 
-  // Standard YouTube embedding helper
+  // Universal video embedding helper
   const getEmbedUrl = (url: string) => {
     if (!url) return null;
     if (url.includes('youtube.com/watch?v=')) {
@@ -32,6 +32,17 @@ export default function LogiTokFeed() {
     }
     if (url.includes('youtu.be/')) {
       return url.replace('youtu.be/', 'youtube.com/embed/');
+    }
+    if (url.includes('instagram.com')) {
+      if (url.includes('/embed')) return url;
+      const base = url.split('?')[0].replace(/\/$/, "");
+      return `${base}/embed`;
+    }
+    if (url.includes('tiktok.com')) {
+      const videoIdMatch = url.match(/\/video\/(\d+)/);
+      if (videoIdMatch && videoIdMatch[1]) {
+        return `https://www.tiktok.com/embed/v2/${videoIdMatch[1]}`;
+      }
     }
     return url; // Assume it's an embed URL or other format
   };

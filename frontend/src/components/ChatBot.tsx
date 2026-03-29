@@ -86,7 +86,7 @@ export default function ChatBot() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to get response');
+        throw new Error(data.reply || data.error || t('error'));
       }
 
       const assistantMessage: Message = {
@@ -101,7 +101,7 @@ export default function ChatBot() {
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: t('error'),
+        content: err.message || t('error'),
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);

@@ -35,8 +35,8 @@ export default function TopNav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center pr-8 rtl:pr-0 rtl:pl-8">
-            <Link href="/" className="flex items-center gap-2 font-black text-2xl tracking-tight text-white">
-              <Anchor className="w-8 h-8 text-manar-cyan" />
+            <Link href="/" className="flex items-center gap-2 font-black text-2xl tracking-tight text-white whitespace-nowrap">
+              <Anchor className="w-8 h-8 flex-shrink-0 text-manar-cyan" />
               <span>MANARA <span className="text-sm font-normal text-manar-gold">منارة</span></span>
             </Link>
           </div>
