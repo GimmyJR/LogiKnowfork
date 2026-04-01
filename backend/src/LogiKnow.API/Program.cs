@@ -153,44 +153,37 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<LogiKnow.Infrastructure.Persistence.AppDbContext>();
-        dbContext.Database.EnsureDeleted(); // Reset schema during dev
-        dbContext.Database.EnsureCreated();
-    }
-    catch (Exception ex)
-    {
-        Log.Warning(ex, "Failed to initialize the in-memory database on startup.");
-    }
-
-    var roleManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
-    string[] roles = { "Admin", "Moderator", "User" };
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new Microsoft.AspNetCore.Identity.IdentityRole(role));
-    }
-
-    var userManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<LogiKnow.Domain.Entities.User>>();
-    if (await userManager.FindByEmailAsync("admin@manar.com") == null)
-    {
-        var adminUser = new LogiKnow.Domain.Entities.User
+        // Only run migrations, NEVER EnsureDeleted in production!
+        // dbContext.Database.Migrate(); // Optional: if you want auto-migrations
+        
+        var roleManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
+        string[] roles = { "Admin", "Moderator", "User" };
+        foreach (var role in roles)
         {
-            UserName = "admin@manar.com",
-            Email = "admin@manar.com",
-            FullName = "System Administrator",
-            PreferredLanguage = "en"
-        };
-        await userManager.CreateAsync(adminUser, "Admin123!");
-        await userManager.AddToRoleAsync(adminUser, "Admin");
-    }
+            if (!await roleManager.RoleExistsAsync(role))
+                await roleManager.CreateAsync(new Microsoft.AspNetCore.Identity.IdentityRole(role));
+        }
 
-    try
-    {
+        var userManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<LogiKnow.Domain.Entities.User>>();
+        if (await userManager.FindByEmailAsync("admin@manar.com") == null)
+        {
+            var adminUser = new LogiKnow.Domain.Entities.User
+            {
+                UserName = "admin@manar.com",
+                Email = "admin@manar.com",
+                FullName = "System Administrator",
+                PreferredLanguage = "en"
+            };
+            await userManager.CreateAsync(adminUser, "Admin123!");
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+
         var searchService = scope.ServiceProvider.GetRequiredService<ISearchService>();
         await searchService.EnsureIndicesCreatedAsync();
     }
     catch (Exception ex)
     {
-        Log.Warning(ex, "Failed to create Elasticsearch indices on startup. Search features may be unavailable.");
+        Log.Error(ex, "Failed to seed database or indices on startup. The app will still start, but some features may not work.");
     }
 }
 
