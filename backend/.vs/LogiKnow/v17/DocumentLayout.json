@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "src\\LogiKnow.API\\Program.cs",
               "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\LogiKnow\\LogiKnow\\backend\\src\\LogiKnow.API\\Program.cs",
               "RelativeToolTip": "src\\LogiKnow.API\\Program.cs",
-              "ViewState": "AQIAAJoAAAAAAAAAAAAswKcAAAAIAAAA",
+              "ViewState": "AQIAAJoAAAAAAAAAAAAswJ4AAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T00:42:41.006Z",
               "EditorCaption": ""
@@ -52,15 +52,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "LogiKnow.API",
+              "Title": "LogiKnow.API.csproj",
               "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\LogiKnow\\LogiKnow\\backend\\src\\LogiKnow.API\\LogiKnow.API.csproj",
               "RelativeDocumentMoniker": "src\\LogiKnow.API\\LogiKnow.API.csproj",
               "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\LogiKnow\\LogiKnow\\backend\\src\\LogiKnow.API\\LogiKnow.API.csproj",
               "RelativeToolTip": "src\\LogiKnow.API\\LogiKnow.API.csproj",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-03-27T00:35:47.987Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T00:35:47.987Z"
             }
           ]
         }
