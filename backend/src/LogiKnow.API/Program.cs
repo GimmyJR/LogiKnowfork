@@ -4,6 +4,7 @@ using LogiKnow.Domain.Interfaces;
 using LogiKnow.Infrastructure;
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -151,8 +152,12 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<LogiKnow.Infrastructure.Persistence.AppDbContext>();
-        // Only run migrations, NEVER EnsureDeleted in production!
-        // dbContext.Database.Migrate(); // Optional: if you want auto-migrations
+        
+        // Ensure pending migrations are safely applied to the production database automatically on startup:
+        if (dbContext.Database.IsRelational())
+        {
+            await dbContext.Database.MigrateAsync();
+        }
         
         var roleManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
         string[] roles = { "Admin", "Moderator", "User" };
