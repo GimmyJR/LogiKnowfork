@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Search, Loader2 } from 'lucide-react';
 import { SearchService, SearchResultDto } from '@/api/client';
 import { useDebounce } from '@/hooks/useDebounce';
+import { Link } from '@/i18n/routing';
 
 export default function SearchBar() {
   const t = useTranslations('Index');
@@ -60,19 +61,22 @@ export default function SearchBar() {
             <div className="p-4 text-blue-200/50 text-center">{tSearch('noResults')}</div>
           )}
           <ul className="max-h-[400px] overflow-y-auto">
-            {results.map((r) => (
-              <li key={`${r.type}-${r.id}`} className="border-b last:border-0 border-white/10 hover:bg-white/5 cursor-pointer transition-colors">
-                <a href={`/${r.type}s/${r.id}`} className="block p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-semibold text-amber-400">{r.title}</span>
-                    <span className="text-xs uppercase tracking-wider text-blue-200/50 font-medium px-2 py-1 bg-white/10 rounded-full">{r.type}</span>
-                  </div>
-                  {r.snippet && (
-                    <p className="text-sm text-blue-100/60 line-clamp-2" dangerouslySetInnerHTML={{ __html: r.snippet }}></p>
-                  )}
-                </a>
-              </li>
-            ))}
+            {results.map((r) => {
+              const basePath = r.type === 'academic' ? 'academic' : `${r.type}s`;
+              return (
+                <li key={`${r.type}-${r.id}`} className="border-b last:border-0 border-white/10 hover:bg-white/5 cursor-pointer transition-colors">
+                  <Link href={`/${basePath}/${r.id}` as any} onClick={() => setOpen(false)} className="block p-4">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-amber-400">{r.title}</span>
+                      <span className="text-xs uppercase tracking-wider text-blue-200/50 font-medium px-2 py-1 bg-white/10 rounded-full">{r.type}</span>
+                    </div>
+                    {r.snippet && (
+                      <p className="text-sm text-blue-100/60 line-clamp-2" dangerouslySetInnerHTML={{ __html: r.snippet }}></p>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
