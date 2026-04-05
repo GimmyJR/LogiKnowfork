@@ -164,7 +164,7 @@ export const ModerationService = {
   getPending: (page = 1, size = 20) =>
     apiClient.get<PaginatedResponse<SubmissionDto>>('/moderation/pending', { params: { page, size } }),
   approve: (id: string) =>
-    apiClient.post<{ message: string; data: SubmissionDto }>(`/moderation/${id}/approve`),
+    apiClient.post<{ message: string; data: SubmissionDto }>(`/moderation/${id}/approve`, {}),
   reject: (id: string, reason: string) =>
     apiClient.post<{ message: string; data: SubmissionDto }>(`/moderation/${id}/reject`, { reason }),
 };
