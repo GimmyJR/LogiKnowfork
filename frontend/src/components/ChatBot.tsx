@@ -86,7 +86,9 @@ export default function ChatBot({ inlineMode = false }: { inlineMode?: boolean }
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.reply || data.error || t('error'));
+        // Show detail for debugging (e.g. "API key invalid", "quota exceeded")
+        const detail = data.detail ? ` — ${data.detail}` : '';
+        throw new Error(`${data.error || t('error')}${detail} (HTTP ${res.status})`);
       }
 
       const assistantMessage: Message = {

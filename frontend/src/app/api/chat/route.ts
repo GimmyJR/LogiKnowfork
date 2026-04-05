@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
 
 const SYSTEM_PROMPT = `You are MANAR AI Assistant (منار), a specialized logistics and supply chain knowledge assistant for the MANAR educational platform.
 
@@ -30,6 +29,10 @@ interface ChatMessage {
 }
 
 export async function POST(request: NextRequest) {
+  // Read env vars inside the handler so Vercel always resolves them at runtime
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
   try {
     if (!GEMINI_API_KEY) {
       return NextResponse.json(
@@ -98,8 +101,15 @@ export async function POST(request: NextRequest) {
     if (!geminiResponse.ok) {
       const errorData = await geminiResponse.text();
       console.error('Gemini API error:', errorData);
+      // Return actual Gemini error for debugging — remove this after fixing
+      let parsedError: any = errorData;
+      try { parsedError = JSON.parse(errorData); } catch {}
       return NextResponse.json(
-        { error: 'Failed to get response from AI' },
+        { 
+          error: 'Gemini API error',
+          status: geminiResponse.status,
+          detail: parsedError?.error?.message || parsedError?.error || errorData
+        },
         { status: 502 }
       );
     }
