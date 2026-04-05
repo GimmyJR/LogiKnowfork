@@ -49,12 +49,14 @@ export default function LogiTokFeed() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden relative">
-      <div className="flex justify-between items-center px-6 py-4 z-20 bg-black/40 backdrop-blur-md border-b border-white/5">
+      {/* Sticky Header */}
+      <div className="flex-shrink-0 flex justify-between items-center px-6 py-4 z-20 bg-black/40 backdrop-blur-md border-b border-white/5">
         <h2 className="text-2xl font-black text-white glow-text italic">MANAR Arena</h2>
         <span className="px-4 py-1 rounded-full glass-panel text-xs text-manar-cyan font-bold tracking-widest border-manar-cyan/50">LIVE PITCHES</span>
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-24 snap-y snap-mandatory scrollbar-hide px-4 flex flex-col gap-6 pt-6">
+      {/* Scrollable Video List — scrolls in-place, never affects the page */}
+      <div className="flex-1 overflow-y-auto pb-6 snap-y snap-mandatory scrollbar-hide px-4 flex flex-col gap-6 pt-6">
         {loading ? (
           <div className="flex-1 flex items-center justify-center">
              <Loader2 className="w-12 h-12 text-manar-cyan animate-spin" />
@@ -83,7 +85,7 @@ export default function LogiTokFeed() {
               <Video className="w-24 h-24 text-white/10 absolute" />
             )}
 
-            {/* Video Info overlay (pointer-events-none so we can pause/play the iframe underneath) */}
+            {/* Video Info overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none">
               <h3 className="text-white font-bold text-lg mb-1">{vid.author}</h3>
               <p className="text-gray-300 text-sm mb-4 line-clamp-2">{vid.title}</p>

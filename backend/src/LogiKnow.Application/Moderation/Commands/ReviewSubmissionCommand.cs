@@ -24,56 +24,55 @@ public class ReviewSubmissionHandler : IRequestHandler<ReviewSubmissionCommand, 
 
     public async Task<SubmissionDto> Handle(ReviewSubmissionCommand request, CancellationToken ct)
     {
-        var submission = await _repo.GetByIdAsync(request.Id, ct);
-        if (submission == null)
-            throw new Exception("Submission not found");
+        var submission = await _repo.GetByIdAsync(request.Id, ct)
+            ?? throw new KeyNotFoundException($"Submission {request.Id} not found.");
 
         if (submission.Status != SubmissionStatus.Pending)
-            throw new Exception("Submission is not pending");
+            throw new InvalidOperationException("Submission is not in a pending state.");
 
-        submission.Status = request.Approve ? SubmissionStatus.Approved : SubmissionStatus.Rejected;
+        submission.Status      = request.Approve ? SubmissionStatus.Approved : SubmissionStatus.Rejected;
         submission.ReviewNotes = request.Reason;
-        submission.ReviewedBy = request.ReviewedBy;
-        submission.ReviewedAt = DateTime.UtcNow;
+        submission.ReviewedBy  = request.ReviewedBy;
+        submission.ReviewedAt  = DateTime.UtcNow;
 
         await _repo.UpdateAsync(submission, ct);
 
-        // If approved, insert the entity into the respected repository
+        // If approved, update the linked entity's status so it becomes publicly visible
         if (request.Approve)
         {
-            if (submission.EntityType == "AcademicEntry")
+            if (submission.EntityType == "AcademicEntry" &&
+                Guid.TryParse(submission.JsonData, out var academicId))
             {
-                var entry = System.Text.Json.JsonSerializer.Deserialize<AcademicEntry>(submission.JsonData);
+                var entry = await _academicRepo.GetByIdAsync(academicId, ct);
                 if (entry != null)
                 {
                     entry.Status = SubmissionStatus.Approved;
-                    await _academicRepo.CreateAsync(entry, ct);
+                    await _academicRepo.UpdateAsync(entry, ct);
                 }
             }
-            else if (submission.EntityType == "Book")
+            else if (submission.EntityType == "Book" &&
+                     Guid.TryParse(submission.JsonData, out var bookId))
             {
-                var book = System.Text.Json.JsonSerializer.Deserialize<Book>(submission.JsonData);
+                var book = await _bookRepo.GetByIdAsync(bookId, ct);
                 if (book != null)
                 {
                     book.IsPublished = true;
-                    // Ensure the ID is not already tracked or conflict - the submission generated a Guid,
-                    // but we can generate a new one or keep it. We'll keep it.
-                    await _bookRepo.CreateAsync(book, ct);
+                    await _bookRepo.UpdateAsync(book, ct);
                 }
             }
         }
 
         return new SubmissionDto
         {
-            Id = submission.Id,
+            Id         = submission.Id,
             EntityType = submission.EntityType,
-            JsonData = submission.JsonData,
-            Status = submission.Status.ToString(),
+            JsonData   = submission.JsonData,
+            Status     = submission.Status.ToString(),
             ReviewNotes = submission.ReviewNotes,
             SubmittedBy = submission.SubmittedBy,
-            ReviewedBy = submission.ReviewedBy,
-            ReviewedAt = submission.ReviewedAt,
-            CreatedAt = submission.CreatedAt
+            ReviewedBy  = submission.ReviewedBy,
+            ReviewedAt  = submission.ReviewedAt,
+            CreatedAt   = submission.CreatedAt
         };
     }
 }

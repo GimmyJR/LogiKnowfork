@@ -32,18 +32,18 @@ public class SubmitAcademicEntryHandler : IRequestHandler<SubmitAcademicEntryCom
         if (Enum.TryParse<AcademicEntryType>(request.Data.Type, true, out var type))
             entry.Type = type;
 
-        // Create a Submission record
+        var created = await _repo.CreateAsync(entry, ct);
+
+        // Create a Submission record so admin moderation panel can see and approve/reject it
         var submission = new Submission
         {
-            EntityType = "AcademicEntry",
-            JsonData = System.Text.Json.JsonSerializer.Serialize(entry),
-            Status = SubmissionStatus.Pending,
+            EntityType  = "AcademicEntry",
+            JsonData    = created.Id.ToString(),   // Store the AcademicEntry Id
+            Status      = SubmissionStatus.Pending,
             SubmittedBy = request.SubmittedBy
         };
-
         await _submissionRepo.CreateAsync(submission, ct);
 
-        // For now, we still return the mapped DTO
-        return _mapper.Map<AcademicEntryDto>(entry);
+        return _mapper.Map<AcademicEntryDto>(created);
     }
 }

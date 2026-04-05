@@ -1,42 +1,33 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/useAuth';
-import { apiClient, AcademicEntryDto } from '@/api/client';
+import { ModerationService, SubmissionDto } from '@/api/client';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Loader2, ShieldCheck, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
-
-interface PendingSubmission extends AcademicEntryDto {
-  submitterEmail?: string;
-  submitterName?: string;
-}
+import { Loader2, ShieldCheck, CheckCircle2, XCircle, AlertCircle, FileText, User, Calendar } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
-  const t = useTranslations('Common');
-  const [submissions, setSubmissions] = useState<PendingSubmission[]>([]);
+  const [submissions, setSubmissions] = useState<SubmissionDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [error, setError] = useState('');
-  const [rejectReason, setRejectReason] = useState<{id: string, reason: string} | null>(null);
+  const [rejectReason, setRejectReason] = useState<{ id: string; reason: string } | null>(null);
 
   const isAdminOrModerator = user?.roles?.includes('Admin') || user?.roles?.includes('Moderator');
 
   useEffect(() => {
-    if (isAdminOrModerator) {
-      loadPendingSubmissions();
-    } else {
-      setLoading(false);
-    }
+    if (isAdminOrModerator) loadPendingSubmissions();
+    else setLoading(false);
   }, [isAdminOrModerator]);
 
   const loadPendingSubmissions = async () => {
+    setLoading(true);
     try {
-      const { data } = await apiClient.get('/moderation/pending');
+      const { data } = await ModerationService.getPending(1, 50);
       setSubmissions(data.data || []);
     } catch (err: any) {
-      setError(err.message || 'Failed to load submissions');
+      setError(err?.response?.data?.detail || err.message || 'Failed to load submissions');
     } finally {
       setLoading(false);
     }
@@ -44,11 +35,12 @@ export default function AdminDashboard() {
 
   const handleApprove = async (id: string) => {
     setActionLoading(id);
+    setError('');
     try {
-      await apiClient.post(`/moderation/${id}/approve`);
+      await ModerationService.approve(id);
       setSubmissions(prev => prev.filter(s => s.id !== id));
     } catch (err: any) {
-      setError(err.message || 'Failed to approve');
+      setError(err?.response?.data?.detail || err.message || 'Failed to approve');
     } finally {
       setActionLoading(null);
     }
@@ -59,14 +51,14 @@ export default function AdminDashboard() {
       alert('Please provide a reason for rejection.');
       return;
     }
-    
     setActionLoading(id);
+    setError('');
     try {
-      await apiClient.post(`/moderation/${id}/reject`, { reason: rejectReason.reason });
+      await ModerationService.reject(id, rejectReason.reason);
       setSubmissions(prev => prev.filter(s => s.id !== id));
       setRejectReason(null);
     } catch (err: any) {
-      setError(err.message || 'Failed to reject');
+      setError(err?.response?.data?.detail || err.message || 'Failed to reject');
     } finally {
       setActionLoading(null);
     }
@@ -93,24 +85,19 @@ export default function AdminDashboard() {
               <ShieldCheck className="w-8 h-8 text-manar-cyan" />
               Admin Dashboard
             </h1>
-            <p className="text-blue-200/70">
-              Manage platform content, review submissions, and oversee users.
-            </p>
+            <p className="text-blue-200/70">Review pending submissions and manage platform content.</p>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            {/* Stats Cards */}
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {[
-              { label: 'Pending Reviews', value: submissions.length, color: 'border-manar-gold/50 text-manar-gold' },
-              { label: 'Total Terms', value: '0', color: 'border-white/10 text-white' },
-              { label: 'Total Books', value: '0', color: 'border-white/10 text-white' },
-              { label: 'Total Academic', value: '0', color: 'border-white/10 text-white' }
+              { label: 'Pending Reviews', value: loading ? '-' : submissions.length, color: 'border-manar-gold/50 text-manar-gold' },
+              { label: 'Academic Entries', value: loading ? '-' : submissions.filter(s => s.entityType === 'AcademicEntry').length, color: 'border-manar-cyan/30 text-manar-cyan' },
+              { label: 'Books', value: loading ? '-' : submissions.filter(s => s.entityType === 'Book').length, color: 'border-white/10 text-white' },
             ].map((stat, i) => (
               <div key={i} className={`glass-card p-6 rounded-2xl border ${stat.color} flex flex-col justify-center`}>
                 <span className="text-white/60 text-sm font-medium mb-1">{stat.label}</span>
-                <span className={`text-4xl font-black ${stat.color.replace('border-', 'text-').split('/')[0]}`}>
-                  {loading ? '-' : stat.value}
-                </span>
+                <span className={`text-4xl font-black ${stat.color.split(' ')[1]}`}>{stat.value}</span>
               </div>
             ))}
           </div>
@@ -122,9 +109,7 @@ export default function AdminDashboard() {
             </h2>
 
             {error && (
-              <div className="bg-red-500/10 text-red-400 p-4 rounded-xl mb-6 border border-red-500/20">
-                {error}
-              </div>
+              <div className="bg-red-500/10 text-red-400 p-4 rounded-xl mb-6 border border-red-500/20">{error}</div>
             )}
 
             {loading ? (
@@ -142,41 +127,41 @@ export default function AdminDashboard() {
                 {submissions.map((sub) => (
                   <div key={sub.id} className="bg-white/5 border border-white/10 rounded-2xl p-6 transition-all hover:bg-white/10">
                     <div className="flex flex-col md:flex-row justify-between gap-6">
-                      <div className="space-y-3 flex-1">
-                        <div className="flex items-center gap-3">
+                      <div className="space-y-3 flex-1 min-w-0">
+                        <div className="flex items-center gap-3 flex-wrap">
                           <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-manar-cyan/20 text-manar-cyan border border-manar-cyan/30">
-                            {sub.type}
+                            {sub.entityType}
                           </span>
-                          <span className="text-white/40 text-sm">{new Date().toLocaleDateString()}</span>
+                          <span className="text-white/40 text-sm flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5" />
+                            {new Date(sub.createdAt).toLocaleDateString()}
+                          </span>
                         </div>
-                        <h3 className="text-xl font-bold text-white">{sub.title}</h3>
-                        <p className="text-white/70 text-sm leading-relaxed line-clamp-2">{sub.abstract}</p>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-3 border-t border-white/10 text-sm">
+
+                        <div className="flex items-start gap-2 text-sm">
+                          <FileText className="w-4 h-4 text-manar-gold mt-0.5 flex-shrink-0" />
                           <div>
-                            <span className="block text-white/40 text-xs mb-1">Author</span>
-                            <span className="text-white">{sub.author}</span>
+                            <p className="text-white/60 text-xs mb-0.5">Linked Entry ID</p>
+                            <p className="text-white font-mono text-xs break-all">{sub.jsonData}</p>
                           </div>
-                          <div>
-                            <span className="block text-white/40 text-xs mb-1">Institution</span>
-                            <span className="text-white">{sub.university}</span>
-                          </div>
-                          <div>
-                            <span className="block text-white/40 text-xs mb-1">Year</span>
-                            <span className="text-white">{sub.year}</span>
-                          </div>
-                          {sub.documentUrl && (
-                            <div>
-                              <span className="block text-white/40 text-xs mb-1">Document</span>
-                              <a href={sub.documentUrl} target="_blank" rel="noreferrer" className="text-manar-cyan hover:underline">View PDF</a>
-                            </div>
-                          )}
                         </div>
+
+                        <div className="flex items-start gap-2 text-sm">
+                          <User className="w-4 h-4 text-manar-cyan mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="text-white/60 text-xs mb-0.5">Submitted by (User ID)</p>
+                            <p className="text-white text-xs break-all">{sub.submittedBy}</p>
+                          </div>
+                        </div>
+
+                        {sub.reviewNotes && (
+                          <p className="text-white/60 text-sm italic border-l-2 border-manar-gold/40 pl-3">{sub.reviewNotes}</p>
+                        )}
                       </div>
 
                       <div className="flex flex-col justify-start gap-3 min-w-[200px]">
                         {rejectReason?.id === sub.id ? (
-                          <div className="space-y-3 animate-in fade-in slide-in-from-right-4">
+                          <div className="space-y-3">
                             <textarea
                               placeholder="Reason for rejection..."
                               className="w-full bg-black/40 border border-white/20 rounded-xl p-3 text-sm text-white focus:ring-1 focus:ring-red-400 focus:border-red-400 outline-none resize-none"
@@ -190,7 +175,7 @@ export default function AdminDashboard() {
                                 disabled={actionLoading === sub.id || !rejectReason.reason.trim()}
                                 className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
                               >
-                                {actionLoading === sub.id ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Confirm'}
+                                {actionLoading === sub.id ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Confirm Reject'}
                               </button>
                               <button
                                 onClick={() => setRejectReason(null)}

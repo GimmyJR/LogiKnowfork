@@ -56,6 +56,18 @@ export interface AcademicEntryDto {
   tags: string[];
 }
 
+export interface SubmissionDto {
+  id: string;
+  entityType: string;
+  jsonData: string;
+  status: string;
+  reviewNotes?: string;
+  submittedBy: string;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  createdAt: string;
+}
+
 export interface ExplanationResponse {
   explanation: string;
   language: string;
@@ -142,8 +154,19 @@ export const BooksService = {
 };
 
 export const AcademicService = {
-  getEntries: (page = 1, size = 20) => 
+  getEntries: (page = 1, size = 20) =>
     apiClient.get<PaginatedResponse<AcademicEntryDto>>('/academic', { params: { page, size } }),
+  submitEntry: (data: any) =>
+    apiClient.post<SingleResponse<AcademicEntryDto>>('/academic/submit', data),
+};
+
+export const ModerationService = {
+  getPending: (page = 1, size = 20) =>
+    apiClient.get<PaginatedResponse<SubmissionDto>>('/moderation/pending', { params: { page, size } }),
+  approve: (id: string) =>
+    apiClient.post<{ message: string; data: SubmissionDto }>(`/moderation/${id}/approve`),
+  reject: (id: string, reason: string) =>
+    apiClient.post<{ message: string; data: SubmissionDto }>(`/moderation/${id}/reject`, { reason }),
 };
 
 export const SearchService = {
