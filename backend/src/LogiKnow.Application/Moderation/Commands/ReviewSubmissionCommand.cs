@@ -14,12 +14,18 @@ public class ReviewSubmissionHandler : IRequestHandler<ReviewSubmissionCommand, 
     private readonly ISubmissionRepository _repo;
     private readonly IAcademicRepository _academicRepo;
     private readonly IBookRepository _bookRepo;
+    private readonly ISearchService _searchService;
 
-    public ReviewSubmissionHandler(ISubmissionRepository repo, IAcademicRepository academicRepo, IBookRepository bookRepo)
+    public ReviewSubmissionHandler(
+        ISubmissionRepository repo, 
+        IAcademicRepository academicRepo, 
+        IBookRepository bookRepo,
+        ISearchService searchService)
     {
         _repo = repo;
         _academicRepo = academicRepo;
         _bookRepo = bookRepo;
+        _searchService = searchService;
     }
 
     public async Task<SubmissionDto> Handle(ReviewSubmissionCommand request, CancellationToken ct)
@@ -48,16 +54,42 @@ public class ReviewSubmissionHandler : IRequestHandler<ReviewSubmissionCommand, 
                 {
                     entry.Status = SubmissionStatus.Approved;
                     await _academicRepo.UpdateAsync(entry, ct);
+                    
+                    // Trigger indexing for the approved entry
+                    await _searchService.IndexAcademicEntryAsync(entry.Id, ct);
                 }
             }
-            else if (submission.EntityType == "Book" &&
-                     Guid.TryParse(submission.JsonData, out var bookId))
+            else if (submission.EntityType == "Book")
             {
-                var book = await _bookRepo.GetByIdAsync(bookId, ct);
-                if (book != null)
+                try 
                 {
-                    book.IsPublished = true;
-                    await _bookRepo.UpdateAsync(book, ct);
+                    var book = System.Text.Json.JsonSerializer.Deserialize<Book>(submission.JsonData);
+                    if (book != null)
+                    {
+                        book.IsPublished = true;
+                        
+                        // Submissions for books might contain new books or updates
+                        var existing = await _bookRepo.GetByIdAsync(book.Id, ct);
+                        if (existing == null)
+                            await _bookRepo.CreateAsync(book, ct);
+                        else
+                            await _bookRepo.UpdateAsync(book, ct);
+                        
+                        // Note: Full-text indexing for books (pages) is triggered after PDF upload
+                    }
+                }
+                catch (System.Text.Json.JsonException)
+                {
+                    // If it's just an ID (future proofing), handle that as well
+                    if (Guid.TryParse(submission.JsonData, out var bookId))
+                    {
+                        var book = await _bookRepo.GetByIdAsync(bookId, ct);
+                        if (book != null)
+                        {
+                            book.IsPublished = true;
+                            await _bookRepo.UpdateAsync(book, ct);
+                        }
+                    }
                 }
             }
         }

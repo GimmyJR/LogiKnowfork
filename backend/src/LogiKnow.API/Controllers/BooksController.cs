@@ -43,7 +43,8 @@ public class BooksController : ControllerBase
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
     {
         _logger.LogDebug("GetById book: {Id}", id);
-        return Ok(); // Delegate to mediator
+        var result = await _mediator.Send(new GetBookByIdQuery(id), ct);
+        return Ok(new SingleResponse<BookDto> { Data = result });
     }
 
     [HttpPost]
@@ -60,8 +61,9 @@ public class BooksController : ControllerBase
     public async Task<IActionResult> Submit([FromBody] SubmitBookRequest request, CancellationToken ct = default)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
-        _logger.LogDebug("Submit book by user: {UserId}", userId);
-        var result = await _mediator.Send(new SubmitBookCommand(request, userId), ct);
+        var isAdmin = User.IsInRole("Admin");
+        _logger.LogDebug("Submit book by user: {UserId}, IsAdmin: {IsAdmin}", userId, isAdmin);
+        var result = await _mediator.Send(new SubmitBookCommand(request, userId, isAdmin), ct);
         return Ok(new SingleResponse<BookDto> { Data = result });
     }
 

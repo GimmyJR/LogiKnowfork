@@ -139,6 +139,9 @@ export const BooksService = {
   getBooks: (page = 1, size = 20) => 
     apiClient.get<PaginatedResponse<BookDto>>('/books', { params: { page, size } }),
     
+  getBook: (id: string) =>
+    apiClient.get<SingleResponse<BookDto>>(`/books/${id}`),
+    
   submitBook: (data: any) =>
     apiClient.post<SingleResponse<BookDto>>('/books/submit', data),
 
@@ -156,6 +159,9 @@ export const BooksService = {
 export const AcademicService = {
   getEntries: (page = 1, size = 20) =>
     apiClient.get<PaginatedResponse<AcademicEntryDto>>('/academic', { params: { page, size } }),
+    
+  getEntry: (id: string) =>
+    apiClient.get<SingleResponse<AcademicEntryDto>>(`/academic/${id}`),
   submitEntry: (data: any) =>
     apiClient.post<SingleResponse<AcademicEntryDto>>('/academic/submit', data),
 };

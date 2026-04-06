@@ -56,58 +56,71 @@ export default function LogiTokFeed() {
       </div>
 
       {/* Scrollable Video List — scrolls in-place, never affects the page */}
-      <div className="flex-1 overflow-y-auto pb-6 snap-y snap-mandatory scrollbar-hide px-4 flex flex-col gap-6 pt-6">
+      <div className="flex-1 overflow-y-auto snap-y snap-mandatory scrollbar-hide flex flex-col items-center">
         {loading ? (
-          <div className="flex-1 flex items-center justify-center">
+          <div className="h-full w-full flex items-center justify-center">
              <Loader2 className="w-12 h-12 text-manar-cyan animate-spin" />
           </div>
         ) : videos.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center text-white/50">
+          <div className="h-full w-full flex items-center justify-center text-white/50">
             No videos available in the Arena right now.
           </div>
         ) : videos.map((vid, i) => (
           <motion.div
             key={vid.id}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.15, type: 'spring', stiffness: 100 }}
-            className={`w-full aspect-[9/16] max-h-[75vh] rounded-3xl snap-center relative overflow-hidden bg-black/50 border border-white/10 shadow-2xl flex items-center justify-center group`}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.1, duration: 0.5 }}
+            className="w-full h-full flex-shrink-0 snap-start flex items-center justify-center relative bg-black/20"
           >
-            {/* Embedded Iframe */}
-            {getEmbedUrl(vid.url) ? (
-              <iframe 
-                src={`${getEmbedUrl(vid.url)}?autoplay=0&controls=0&modestbranding=1&loop=1`}
-                className="absolute inset-0 w-full h-full pointer-events-auto"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
-              <Video className="w-24 h-24 text-white/10 absolute" />
-            )}
+            {/* The Video Frame — Large and prominent */}
+            <div className={`relative w-[92%] h-[90%] aspect-[9/16] max-w-[500px] rounded-[2rem] overflow-hidden bg-black/80 border border-white/10 shadow-[0_0_50px_rgba(34,211,238,0.1)] group`}>
+               {/* Click-to-interact overlay to prevent scroll trapping */}
+               <div className="absolute inset-0 z-20 pointer-events-auto group-hover:pointer-events-none transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-0">
+                  {/* This div catches the scroll wheel but disappears on hover so clicks work */}
+               </div>
 
-            {/* Video Info overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none">
-              <h3 className="text-white font-bold text-lg mb-1">{vid.author}</h3>
-              <p className="text-gray-300 text-sm mb-4 line-clamp-2">{vid.title}</p>
-              {vid.description && (
-                <p className="text-white/60 text-xs mb-4 line-clamp-1">{vid.description}</p>
-              )}
-            </div>
+               {/* Embedded Iframe */}
+               {getEmbedUrl(vid.url) ? (
+                 <iframe 
+                   src={`${getEmbedUrl(vid.url)}?autoplay=0&controls=1&modestbranding=1&loop=1`}
+                   className="absolute inset-0 w-full h-full border-none"
+                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                   allowFullScreen
+                 />
+               ) : (
+                 <Video className="w-24 h-24 text-white/10 absolute" />
+               )}
 
-            {/* Floating Action Buttons */}
-            <div className="absolute ltr:right-4 rtl:left-4 bottom-24 flex flex-col gap-6 z-10 pointer-events-auto">
-              <button className="flex flex-col items-center gap-1 group/btn">
-                <div className="w-12 h-12 rounded-full glass-panel flex items-center justify-center group-hover/btn:bg-red-500/20 transition-colors">
-                  <Heart className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xs text-white font-bold">{vid.views || '0'}</span>
-              </button>
-              <button className="flex flex-col items-center gap-1 group/btn">
-                <div className="w-12 h-12 rounded-full glass-panel flex items-center justify-center group-hover/btn:bg-blue-500/20 transition-colors">
-                  <MessageCircle className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xs text-white font-bold">Share</span>
-              </button>
+               {/* Video Info overlay */}
+               <div className="absolute bottom-0 left-0 right-0 p-8 pb-10 bg-gradient-to-t from-black/95 via-black/60 to-transparent pointer-events-none z-10 transition-transform group-hover:translate-y-2 duration-300">
+                 <div className="flex items-center gap-3 mb-3">
+                   <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-manar-cyan to-blue-500 flex items-center justify-center font-bold text-white shadow-lg">
+                      {vid.author?.charAt(0).toUpperCase()}
+                   </div>
+                   <h3 className="text-white font-bold text-lg tracking-tight drop-shadow-md">{vid.author}</h3>
+                 </div>
+                 <p className="text-white/90 text-sm mb-2 font-medium line-clamp-2">{vid.title}</p>
+                 {vid.description && (
+                   <p className="text-white/50 text-xs line-clamp-1 italic">{vid.description}</p>
+                 )}
+               </div>
+
+               {/* Floating Action Buttons */}
+               <div className="absolute ltr:right-5 rtl:left-5 bottom-24 flex flex-col gap-8 z-30">
+                 <button className="flex flex-col items-center gap-2 group/btn active:scale-90 transition-transform">
+                   <div className="w-14 h-14 rounded-full glass-panel-heavy flex items-center justify-center group-hover/btn:bg-red-500/30 group-hover/btn:border-red-500/50 transition-all border border-white/20 shadow-xl">
+                     <Heart className="w-7 h-7 text-white fill-white/10" />
+                   </div>
+                   <span className="text-xs text-white/80 font-black tracking-widest">{vid.views || '0'}K</span>
+                 </button>
+                 <button className="flex flex-col items-center gap-2 group/btn active:scale-90 transition-transform">
+                   <div className="w-14 h-14 rounded-full glass-panel-heavy flex items-center justify-center group-hover/btn:bg-blue-500/30 group-hover/btn:border-blue-500/50 transition-all border border-white/20 shadow-xl">
+                     <Share2 className="w-7 h-7 text-white" />
+                   </div>
+                   <span className="text-xs text-white/80 font-black tracking-widest uppercase">Share</span>
+                 </button>
+               </div>
             </div>
           </motion.div>
         ))}

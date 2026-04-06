@@ -40,7 +40,8 @@ public class AcademicController : ControllerBase
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
     {
         _logger.LogDebug("GetById academic entry: {Id}", id);
-        return Ok(); // Delegate to mediator
+        var result = await _mediator.Send(new GetAcademicEntryByIdQuery(id), ct);
+        return Ok(new SingleResponse<AcademicEntryDto> { Data = result });
     }
 
     [Authorize]
@@ -48,8 +49,9 @@ public class AcademicController : ControllerBase
     public async Task<IActionResult> Submit([FromBody] SubmitAcademicEntryRequest request, CancellationToken ct = default)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
-        _logger.LogDebug("Submit academic entry by user: {UserId}", userId);
-        var result = await _mediator.Send(new SubmitAcademicEntryCommand(request, userId), ct);
+        var isAdmin = User.IsInRole("Admin");
+        _logger.LogDebug("Submit academic entry by user: {UserId}, IsAdmin: {IsAdmin}", userId, isAdmin);
+        var result = await _mediator.Send(new SubmitAcademicEntryCommand(request, userId, isAdmin), ct);
         return CreatedAtAction(nameof(GetById), new { id = result.Id },
             new SingleResponse<AcademicEntryDto> { Data = result });
     }

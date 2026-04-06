@@ -62,10 +62,15 @@ export default function SearchBar() {
           )}
           <ul className="max-h-[400px] overflow-y-auto">
             {results.map((r) => {
-              const basePath = r.type === 'academic' ? 'academic' : `${r.type}s`;
+              let href = '';
+              if (r.type === 'term') href = `/terms/${r.id}`;
+              else if (r.type === 'academic') href = `/academic/${r.id}`;
+              else if (r.type === 'quote') href = `/books/${r.metadata?.bookId}`;
+              else href = `/${r.type}s/${r.id}`;
+
               return (
                 <li key={`${r.type}-${r.id}`} className="border-b last:border-0 border-white/10 hover:bg-white/5 cursor-pointer transition-colors">
-                  <Link href={`/${basePath}/${r.id}` as any} onClick={() => setOpen(false)} className="block p-4">
+                  <Link href={href as any} onClick={() => setOpen(false)} className="block p-4">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-semibold text-amber-400">{r.title}</span>
                       <span className="text-xs uppercase tracking-wider text-blue-200/50 font-medium px-2 py-1 bg-white/10 rounded-full">{r.type}</span>
