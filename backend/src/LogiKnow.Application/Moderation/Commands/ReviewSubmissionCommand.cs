@@ -40,24 +40,46 @@ public class ReviewSubmissionHandler : IRequestHandler<ReviewSubmissionCommand, 
         // If approved, update the linked entity's status so it becomes publicly visible
         if (request.Approve)
         {
-            if (submission.EntityType == "AcademicEntry" &&
-                Guid.TryParse(submission.JsonData, out var academicId))
+            var entityId = Guid.Empty;
+            
+            // support JsonData being either a direct Guid string OR a JSON object with an Id property
+            if (Guid.TryParse(submission.JsonData, out var parsedId)) 
             {
-                var entry = await _academicRepo.GetByIdAsync(academicId, ct);
-                if (entry != null)
+                entityId = parsedId;
+            } 
+            else 
+            {
+                try 
                 {
-                    entry.Status = SubmissionStatus.Approved;
-                    await _academicRepo.UpdateAsync(entry, ct);
-                }
+                    using var doc = System.Text.Json.JsonDocument.Parse(submission.JsonData);
+                    // Match 'Id' or 'id'
+                    if (doc.RootElement.TryGetProperty("Id", out var idProp) || doc.RootElement.TryGetProperty("id", out idProp))
+                    {
+                        Guid.TryParse(idProp.GetString(), out entityId);
+                    }
+                } 
+                catch { }
             }
-            else if (submission.EntityType == "Book" &&
-                     Guid.TryParse(submission.JsonData, out var bookId))
+
+            if (entityId != Guid.Empty)
             {
-                var book = await _bookRepo.GetByIdAsync(bookId, ct);
-                if (book != null)
+                if (submission.EntityType == "AcademicEntry")
                 {
-                    book.IsPublished = true;
-                    await _bookRepo.UpdateAsync(book, ct);
+                    var entry = await _academicRepo.GetByIdAsync(entityId, ct);
+                    if (entry != null)
+                    {
+                        entry.Status = SubmissionStatus.Approved;
+                        await _academicRepo.UpdateAsync(entry, ct);
+                    }
+                }
+                else if (submission.EntityType == "Book")
+                {
+                    var book = await _bookRepo.GetByIdAsync(entityId, ct);
+                    if (book != null)
+                    {
+                        book.IsPublished = true;
+                        await _bookRepo.UpdateAsync(book, ct);
+                    }
                 }
             }
         }

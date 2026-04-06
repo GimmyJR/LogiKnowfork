@@ -29,10 +29,21 @@ export default function BooksPage({ params }: any) {
   const [quotesLoading, setQuotesLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [quotesError, setQuotesError] = useState('');
+  const [quotePage, setQuotePage] = useState(1);
+  const [quoteTotalPages, setQuoteTotalPages] = useState(1);
+  const [currentQuoteQuery, setCurrentQuoteQuery] = useState('');
+  const [currentQuoteBookId, setCurrentQuoteBookId] = useState<string | undefined>();
+  const quotePageSize = 20;
 
   useEffect(() => {
     loadBooks(currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    if (hasSearched && currentQuoteQuery) {
+      loadQuotes(currentQuoteQuery, currentQuoteBookId, quotePage);
+    }
+  }, [quotePage]);
 
   const loadBooks = async (page: number) => {
     setBooksLoading(true);
@@ -54,13 +65,26 @@ export default function BooksPage({ params }: any) {
   };
 
   const handleQuoteSearch = async (query: string, bookId?: string) => {
+    setHasSearched(true);
+    setCurrentQuoteQuery(query);
+    setCurrentQuoteBookId(bookId);
+    setQuotePage(1); // Reset to page 1 on new search
+    await loadQuotes(query, bookId, 1);
+  };
+
+  const loadQuotes = async (query: string, bookId?: string, page: number = 1) => {
     setQuotesLoading(true);
     setQuotesError('');
-    setHasSearched(true);
     
     try {
-      const res = await SearchService.searchQuotes(query, bookId);
+      const res = await SearchService.searchQuotes(query, bookId, page, quotePageSize);
       setQuotes(res.data?.data || []);
+      
+      if (res.data?.meta?.total) {
+        setQuoteTotalPages(Math.ceil(res.data.meta.total / quotePageSize));
+      } else {
+        setQuoteTotalPages(1);
+      }
     } catch (error: any) {
       setQuotesError(error.response?.data?.error || error.message || 'Failed to search quotes');
     } finally {
@@ -176,11 +200,33 @@ export default function BooksPage({ params }: any) {
                 <div className="space-y-4">
                   <h3 className="text-white/60 text-sm font-medium mb-4 flex items-center gap-2">
                     <span className="w-6 h-0.5 bg-manar-gold/50 rounded-full"></span>
-                    Found {quotes.length} results
+                    Page {quotePage} of {quoteTotalPages}
                   </h3>
                   {quotes.map((quote, idx) => (
                     <QuoteResultCard key={`${quote.bookId}-${quote.pageNumber}-${idx}`} result={quote} />
                   ))}
+                  
+                  {quoteTotalPages > 1 && (
+                    <div className="flex justify-center items-center gap-4 pt-8">
+                      <button 
+                        onClick={() => setQuotePage(p => Math.max(1, p - 1))}
+                        disabled={quotePage === 1}
+                        className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white disabled:opacity-50 hover:bg-white/10 transition-colors"
+                      >
+                        Previous
+                      </button>
+                      <span className="text-white/60 font-medium">
+                        Page {quotePage} of {quoteTotalPages}
+                      </span>
+                      <button 
+                        onClick={() => setQuotePage(p => Math.min(quoteTotalPages, p + 1))}
+                        disabled={quotePage === quoteTotalPages}
+                        className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white disabled:opacity-50 hover:bg-white/10 transition-colors"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : hasSearched ? (
                 <div className="text-center py-20 glass-card rounded-3xl border border-dashed border-white/20">

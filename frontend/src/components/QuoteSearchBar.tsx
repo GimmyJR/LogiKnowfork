@@ -19,9 +19,24 @@ export default function QuoteSearchBar({
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        // Fetch published and indexed books
-        const res = await BooksService.getBooks(1, 100);
-        setBooks(res.data.data.filter(b => b.isIndexedForSearch && b.isPublished));
+        let allBooks: BookDto[] = [];
+        let page = 1;
+        let totalPages = 1;
+        
+        do {
+          const res = await BooksService.getBooks(page, 100);
+          allBooks = [...allBooks, ...res.data.data];
+          
+          if (res.data.meta && res.data.meta.total) {
+            totalPages = Math.ceil(res.data.meta.total / 100);
+          } else {
+            totalPages = 1;
+          }
+          page++;
+        } while (page <= totalPages);
+        
+        // Fetch published books (MockSearchService searches all books even if not indexed via ES)
+        setBooks(allBooks.filter(b => b.isPublished));
       } catch (error) {
         console.error('Failed to load books for filter', error);
       } finally {
