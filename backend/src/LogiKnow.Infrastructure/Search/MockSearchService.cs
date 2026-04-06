@@ -101,9 +101,15 @@ public class MockSearchService : ISearchService
     public async Task<(IReadOnlyList<QuoteSearchResult> Items, int Total)> SearchQuotesAsync(
         string query, Guid? bookId = null, int page = 1, int size = 20, CancellationToken ct = default)
     {
+        var words = query.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
         var dbQuery = _context.BookPages
-            .Include(p => p.Book)
-            .Where(p => p.Content.Contains(query));
+            .Include(p => p.Book).AsQueryable();
+
+        foreach (var word in words)
+        {
+            var searchWord = word;
+            dbQuery = dbQuery.Where(p => p.Content.Contains(searchWord));
+        }
 
         if (bookId.HasValue)
             dbQuery = dbQuery.Where(p => p.BookId == bookId.Value);
