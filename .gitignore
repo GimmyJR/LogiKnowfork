@@ -17,6 +17,7 @@ aux
 .env
 .env.local
 appsettings.Development.json
+appsettings.Production.json
 
 # Git helper files
 git_add_paths.txt

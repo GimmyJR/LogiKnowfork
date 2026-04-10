@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { TermsService, ExplanationResponse } from '@/api/client';
 import { Loader2, Sparkles } from 'lucide-react';
 
-export default function ExplanationPanel({ termId, initialLanguage = 'ar' }: { termId: string, initialLanguage?: string }) {
+export default function ExplanationPanel({ term, initialLanguage = 'ar' }: { term: any, initialLanguage?: string }) {
   const t = useTranslations('Explanation');
   const [explanation, setExplanation] = useState<ExplanationResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -16,8 +16,31 @@ export default function ExplanationPanel({ termId, initialLanguage = 'ar' }: { t
     setLoading(true);
     setError('');
     try {
-      const res = await TermsService.explainTerm(termId, initialLanguage, style);
-      setExplanation(res.data.data);
+      const response = await fetch('/api/explain', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          termNameEn: term.nameEn,
+          termNameAr: term.nameAr,
+          category: term.category,
+          definitionEn: term.definitionEn,
+          lang: initialLanguage,
+          style: style
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate from Vercel API');
+      }
+
+      const result = await response.json();
+      setExplanation({
+        explanation: result.explanation,
+        language: initialLanguage,
+        style: style
+      });
     } catch (err: any) {
       setError(err?.message || 'Failed to generate explanation');
       console.error(err);

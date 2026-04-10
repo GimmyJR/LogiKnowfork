@@ -67,7 +67,7 @@ export default async function TermPage({ params }: any) {
           </div>
         </div>
 
-        <ExplanationPanel termId={term.id} initialLanguage={locale} />
+        <ExplanationPanel term={term} initialLanguage={locale} />
       </div>
     </div>
   );

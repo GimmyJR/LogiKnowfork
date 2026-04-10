@@ -17,7 +17,7 @@ public class GeminiAIService : IAIService
     public GeminiAIService(IConfiguration config, ILogger<GeminiAIService> logger)
     {
         _apiKey = config["GoogleAI:ApiKey"] ?? "";
-        _model = config["GoogleAI:Model"] ?? "gemini-2.5-flash";
+        _model = config["GoogleAI:Model"] ?? "gemini-3-flash";
         _logger = logger;
 
         _isConfigured = !string.IsNullOrWhiteSpace(_apiKey)
@@ -73,7 +73,9 @@ public class GeminiAIService : IAIService
             {
                 var errorBody = await response.Content.ReadAsStringAsync(ct);
                 _logger.LogError("Gemini API error: {StatusCode} - {Body}", response.StatusCode, errorBody);
-                return $"[AI error] {definitionEn}";
+                
+                // Fallback to base definition if AI fails
+                return definitionEn; 
             }
 
             var responseJson = await response.Content.ReadAsStringAsync(ct);
