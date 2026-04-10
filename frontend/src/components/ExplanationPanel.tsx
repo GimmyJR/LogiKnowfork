@@ -32,7 +32,8 @@ export default function ExplanationPanel({ term, initialLanguage = 'ar' }: { ter
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate from Vercel API');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate from Vercel API');
       }
 
       const result = await response.json();
