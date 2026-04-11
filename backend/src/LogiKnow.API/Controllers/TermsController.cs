@@ -59,7 +59,7 @@ public class TermsController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "Admin,Moderator")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTermRequest request, CancellationToken ct = default)
+    public IActionResult Update(Guid id, [FromBody] UpdateTermRequest request)
     {
         _logger.LogDebug("Update term: {Id}", id);
         // Delegate to mediator (handler to be added)
@@ -68,7 +68,7 @@ public class TermsController : ControllerBase
 
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
+    public IActionResult Delete(Guid id)
     {
         _logger.LogDebug("Delete term: {Id}", id);
         // Delegate to mediator (handler to be added)

@@ -47,6 +47,17 @@ public class BooksController : ControllerBase
         return Ok(new SingleResponse<BookDto> { Data = result });
     }
 
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin,Moderator")]
+    public async Task<IActionResult> AdminGetAll(
+        [FromQuery] string? lang, [FromQuery] string? category,
+        [FromQuery] int page = 1, [FromQuery] int size = 20, CancellationToken ct = default)
+    {
+        _logger.LogDebug("AdminGetAll books: lang={Lang}, category={Category}", lang, category);
+        var result = await _mediator.Send(new GetAdminBooksQuery(lang, category, page, size), ct);
+        return Ok(result);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin,Moderator")]
     public async Task<IActionResult> Add([FromBody] AddBookRequest request, CancellationToken ct = default)
@@ -54,6 +65,24 @@ public class BooksController : ControllerBase
         _logger.LogDebug("Add book: {Title}", request.Title);
         var result = await _mediator.Send(new AddBookCommand(request), ct);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, new SingleResponse<BookDto> { Data = result });
+    }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin,Moderator")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBookRequest request, CancellationToken ct = default)
+    {
+        _logger.LogDebug("Update book: {Id}", id);
+        var result = await _mediator.Send(new UpdateBookCommand(id, request), ct);
+        return Ok(new SingleResponse<BookDto> { Data = result });
+    }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
+    {
+        _logger.LogDebug("Delete book: {Id}", id);
+        await _mediator.Send(new DeleteBookCommand(id), ct);
+        return NoContent();
     }
 
     [HttpPost("submit")]

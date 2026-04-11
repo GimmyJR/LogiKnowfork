@@ -38,6 +38,7 @@ export interface BookDto {
   category: string;
   coverUrl?: string;
   externalLink?: string;
+  blobStoragePath?: string;
   isIndexedForSearch: boolean;
   isPublished: boolean;
 }
@@ -138,9 +139,21 @@ export const TermsService = {
 export const BooksService = {
   getBooks: (page = 1, size = 20) => 
     apiClient.get<PaginatedResponse<BookDto>>('/books', { params: { page, size } }),
+
+  getAdminBooks: (page = 1, size = 20, lang?: string, category?: string) => 
+    apiClient.get<PaginatedResponse<BookDto>>('/books/admin', { params: { page, size, lang, category } }),
     
   getBook: (id: string) =>
     apiClient.get<SingleResponse<BookDto>>(`/books/${id}`),
+    
+  addBook: (data: any) =>
+    apiClient.post<SingleResponse<BookDto>>('/books', data),
+
+  updateBook: (id: string, data: any) =>
+    apiClient.put<SingleResponse<BookDto>>(`/books/${id}`, data),
+
+  deleteBook: (id: string) =>
+    apiClient.delete(`/books/${id}`),
     
   submitBook: (data: any) =>
     apiClient.post<SingleResponse<BookDto>>('/books/submit', data),
@@ -153,7 +166,10 @@ export const BooksService = {
         'Content-Type': 'multipart/form-data'
       }
     });
-  }
+  },
+
+  triggerIndex: (id: string) =>
+    apiClient.put(`/books/${id}/index`)
 };
 
 export const AcademicService = {

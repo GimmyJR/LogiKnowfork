@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { ModerationService, SubmissionDto } from '@/api/client';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Loader2, ShieldCheck, CheckCircle2, XCircle, AlertCircle, FileText, User, Calendar } from 'lucide-react';
+import { Loader2, ShieldCheck, CheckCircle2, XCircle, AlertCircle, FileText, User, Calendar, Book } from 'lucide-react';
+import { Link } from '@/i18n/routing';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -85,7 +86,19 @@ export default function AdminDashboard() {
               <ShieldCheck className="w-8 h-8 text-manar-cyan" />
               Admin Dashboard
             </h1>
-            <p className="text-blue-200/70">Review pending submissions and manage platform content.</p>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <p className="text-blue-200/70">Review pending submissions and manage platform content.</p>
+              <div className="flex gap-3">
+                <Link 
+                  href="/admin/books"
+                  className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all"
+                >
+                  <Book className="w-4 h-4 text-manar-cyan" />
+                  Manage Books
+                </Link>
+                {/* Future: Manage Terms, Manage Videos, etc. */}
+              </div>
+            </div>
           </header>
 
           {/* Stats */}

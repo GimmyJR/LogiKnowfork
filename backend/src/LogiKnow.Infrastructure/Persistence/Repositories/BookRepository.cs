@@ -16,11 +16,12 @@ public class BookRepository : IBookRepository
 
     public async Task<(IReadOnlyList<Book> Items, int Total)> GetAllAsync(
         string? lang = null, string? category = null, int page = 1, int size = 20,
-        CancellationToken ct = default)
+        bool onlyPublished = true, CancellationToken ct = default)
     {
-        var query = _context.Books
-            .Where(b => b.IsPublished)
-            .AsQueryable();
+        var query = _context.Books.AsQueryable();
+
+        if (onlyPublished)
+            query = query.Where(b => b.IsPublished);
 
         if (!string.IsNullOrEmpty(lang))
             query = query.Where(b => b.Language == lang);
@@ -47,6 +48,16 @@ public class BookRepository : IBookRepository
         _context.Books.Update(book);
         await _context.SaveChangesAsync(ct);
         return book;
+    }
+
+    public async Task DeleteAsync(Guid id, CancellationToken ct = default)
+    {
+        var book = await _context.Books.FindAsync(new object[] { id }, ct);
+        if (book != null)
+        {
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync(ct);
+        }
     }
 
     public async Task<IReadOnlyList<BookPage>> GetPagesAsync(Guid bookId, CancellationToken ct = default)

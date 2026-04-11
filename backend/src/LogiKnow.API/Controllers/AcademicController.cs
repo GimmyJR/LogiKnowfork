@@ -55,4 +55,6 @@ public class AcademicController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Id },
             new SingleResponse<AcademicEntryDto> { Data = result });
     }
+    //
+    //
 }
